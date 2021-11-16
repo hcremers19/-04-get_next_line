@@ -33,3 +33,17 @@ int	main(void)
 	printf("%s\n", get_next_line(0));
 	return (0);
 }
+/*
+Tant que rd == BUFFER_SIZE, on envoie le contenu de buf dans ret.
+Il faut d'abord avoir alloué l'espace en question dans ret pour y faire rentrer
+buf.
+Une fois que rd < BUFFER_SIZE, on envoie le contenu de buf dans ret mais on a-
+joute un \0 à la fin de buf.
+Peut-on simplement insérer un \0 après le dernier caractère ou doit-on vraiment
+allouer juste la mémoire correspondante à buf ? Et remplir le reste de la mé-
+moire allouée avec des \0 ?
+
+Il faudra ensuite insérer le fait que si read tombe sur un \n, il est censé
+s'arrêter là, et get_next_line renverra la ligne jusque là.
+Ne pas oublier non plus de renvoyer NULL si la fonction n'a rien à lire.
+*/
