@@ -13,4 +13,23 @@
 #include "get_next_line.h"
 
 char	*get_next_line(int fd)
-{}
+{	
+	char	buf[BUFFER_SIZE];
+	char	*ret;
+	int		rd;
+
+	rd = read(fd, buf, BUFFER_SIZE);
+	if (rd < BUFFER_SIZE)
+	{
+		buf[rd] = 0;
+		return (buf);
+	}
+	else
+		return (buf);
+}
+
+int	main(void)
+{
+	printf("%s\n", get_next_line(0));
+	return (0);
+}
