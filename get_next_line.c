@@ -14,18 +14,16 @@
 
 char	*get_next_line(int fd)
 {	
-	char	buf[BUFFER_SIZE];
-	char	*ret;
-	int		rd;
+	char		buf;
+	static char	*ret;
+	int			rd;
 
-	rd = read(fd, buf, BUFFER_SIZE);
-	if (rd < BUFFER_SIZE)
+	while (buf != '\n')
 	{
-		buf[rd] = 0;
-		return (buf);
-	}
-	else
-		return (buf);
+		rd = read(fd, buf, 1);
+		if (rd < 0)
+			ret = ft_strjoin(ret, buf);
+	}	
 }
 
 int	main(void)
@@ -34,6 +32,14 @@ int	main(void)
 	return (0);
 }
 /*
+
+
+
+
+
+
+
+
 Tant que rd == BUFFER_SIZE, on envoie le contenu de buf dans ret.
 Il faut d'abord avoir alloué l'espace en question dans ret pour y faire rentrer
 buf.
@@ -46,4 +52,8 @@ moire allouée avec des \0 ?
 Il faudra ensuite insérer le fait que si read tombe sur un \n, il est censé
 s'arrêter là, et get_next_line renverra la ligne jusque là.
 Ne pas oublier non plus de renvoyer NULL si la fonction n'a rien à lire.
+
+Se renseigner sur malloc, sur calloc, sur str_join, voir en quoi elles peuvent
+m'être utiles.
+Tester une conversion de [] à * et voir si ça fonctionne correctement.
 */
