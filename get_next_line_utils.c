@@ -25,6 +25,30 @@ size_t	ft_strlen(const char *s)
 	return (count);
 }
 
+char	*ft_strchr(const char *s, int c)
+{
+	const char	*r;
+	int			i;
+
+	i = 0;
+	if (!c)
+	{
+		r = s + ft_strlen(s);
+		return ((char *)r);
+	}
+	while (s[i])
+	{
+		if (s[i] == (unsigned char)c)
+		{
+			r = s + i;
+			return ((char *)r);
+		}
+		else
+			i++;
+	}
+	return (0);
+}
+
 void	*ft_calloc(size_t count, size_t size)
 {
 	void	*p;

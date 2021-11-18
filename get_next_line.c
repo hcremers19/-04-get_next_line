@@ -12,48 +12,148 @@
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
-{	
-	char		buf;
-	static char	*ret;
-	int			rd;
-
-	while (buf != '\n')
-	{
-		rd = read(fd, buf, 1);
-		if (rd < 0)
-			ret = ft_strjoin(ret, buf);
-	}	
-}
-
-int	main(void)
+void	*ft_calloc(size_t count, size_t size)
 {
-	printf("%s\n", get_next_line(0));
-	return (0);
+	char	*rtn;
+	size_t	i;
+
+	rtn = (char *)malloc(size * count);
+	if (!rtn)
+		return (0);
+	i = -1;
+	while (++i < count)
+		rtn[i] = 0;
+	return (rtn);
 }
-/*
 
+char	*ft_keepend(char *ptr)
+{
+	int		i;
+	int		j;
+	char	*dest;
 
+	i = 0;
+	while (ptr && ptr[i] && ptr[i] != '\n')
+		i++;
+	dest = ft_calloc(ft_strlen(ptr) - i + 1, sizeof(char));
+	if (!dest)
+		return (0);
+	j = 0;
+	i++;
+	while (ptr[i])
+	{
+		dest[j] = ptr[i];
+		j++;
+		i++;
+	}
+	dest[j] = 0;
+	return (dest);
+}
 
+char	*ft_keepstart(char *ptr)
+{
+	int		i;
+	char	*dest;
 
+	i = 0;
+	while (ptr && ptr[i] && ptr[i] != '\n')
+		i++;
+	dest = ft_calloc(i + 1, sizeof(char));
+	if (!dest)
+		return (0);
+	i = 0;
+	while (ptr[i] && ptr[i] != '\n')
+	{
+		dest[i] = ptr[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
+}
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
 
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
+char	*ft_strjoin(const char *s1, const char *s2)
+{
+	char	*str;
+	int		j;
+	size_t	len;
 
-Tant que rd == BUFFER_SIZE, on envoie le contenu de buf dans ret.
-Il faut d'abord avoir alloué l'espace en question dans ret pour y faire rentrer
-buf.
-Une fois que rd < BUFFER_SIZE, on envoie le contenu de buf dans ret mais on a-
-joute un \0 à la fin de buf.
-Peut-on simplement insérer un \0 après le dernier caractère ou doit-on vraiment
-allouer juste la mémoire correspondante à buf ? Et remplir le reste de la mé-
-moire allouée avec des \0 ?
+	if (s1)
+		len = ft_strlen(s1);
+	if (s2)
+		len = ft_strlen(s1) + ft_strlen(s2);
+	str = ft_calloc(len + 1, sizeof(char));
+	if (!str)
+		return (0);
+	len = 0;
+	while (s1[len])
+	{
+		str[len] = s1[len];
+		len++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		str[len] = s2[j];
+		len++;
+		j++;
+	}
+	str[len] = 0;
+	return (str);
+}
 
-Il faudra ensuite insérer le fait que si read tombe sur un \n, il est censé
-s'arrêter là, et get_next_line renverra la ligne jusque là.
-Ne pas oublier non plus de renvoyer NULL si la fonction n'a rien à lire.
+int	ft_srch_nl(const char *str)
+{
+	int	i;
 
-Se renseigner sur malloc, sur calloc, sur str_join, voir en quoi elles peuvent
-m'être utiles.
-Tester une conversion de [] à * et voir si ça fonctionne correctement.
-*/
+	if (!str)
+		return (-1);
+	i = -1;
+	while (str[++i])
+		if (str[i] == '\n')
+			return (i);
+	return (-1);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stat = NULL;
+	int			rd;
+	char		buf[BUFFER_SIZE + 1];
+	char		*temp;
+	char		*r;
+
+	if (fd < 0 || fd > 1023 || BUFFER_SIZE <= 0)
+		return (0);
+	while (BUFFER_SIZE > 0)
+	{
+		rd = read(fd, buf, BUFFER_SIZE);
+		if (rd == -1)
+			return (0);
+		buf[rd] = 0;
+		temp = stat;
+		stat = ft_strjoin(temp, buf);
+		free(temp);
+		if (ft_srch_nl(stat))
+			break ;
+	}
+	r = ft_keepstart(stat);
+	temp = stat;
+	stat = ft_keepend(temp);
+	free(temp);
+	if (!*stat)
+	{
+		free(stat);
+		stat = NULL;
+	}
+	return (r);
+}
