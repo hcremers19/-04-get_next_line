@@ -33,6 +33,8 @@ char	*ft_keepend(char *str)
 		i++;
 	}
 	dest[j] = 0;
+	if (dest[0] == 0)
+		ft_free(&dest);
 	return (dest);
 }
 
@@ -53,7 +55,6 @@ char	*ft_keepstart(char *str)
 		dest[i] = str[i];
 		i++;
 	}
-//	dest[i++] = '\n';
 	if (str[i] == '\n')
 		dest[i++] = '\n';
 	dest[i] = 0;
@@ -62,75 +63,15 @@ char	*ft_keepstart(char *str)
 	return (dest);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+char	*sub_gnl(char *r, char **stat, char *temp)
 {
-	char	*rtn;
-	size_t	i;
-
-	rtn = (char *)malloc(size * count);
-	if (!rtn)
-		return (0);
-	i = -1;
-	while (++i < count)
-		rtn[i] = 0;
-	return (rtn);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s && s[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin(const char *s1, const char *s2)
-{
-	char	*str;
-	int		j;
-	size_t	len;
-
-	if (!s1 && !s2)
-		return (0);
-	str = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
-	if (!str)
-		return (0);
-	len = 0;
-	while (s1 && s1[len])
-	{
-		str[len] = s1[len];
-		len++;
-	}
-	j = 0;
-	while (s2 && s2[j])
-	{
-		str[len] = s2[j];
-		len++;
-		j++;
-	}
-	str[len] = 0;
-	return (str);
-}
-
-int	ft_srch_nl(const char *str)
-{
-	int	i;
-
-	if (!str)
-		return (0);
-	i = -1;
-	while (str[++i])
-		if (str[i] == '\n')
-			return (i);
-	return (0);
-}
-
-void	ft_free(char **ptr)
-{
-	free(*ptr);
-	*ptr = NULL;
+	r = ft_keepstart(*stat);
+	temp = *stat;
+	*stat = ft_keepend(temp);
+	free(temp);
+	if (!stat)
+		ft_free(stat);
+	return (r);
 }
 
 char	*get_next_line(int fd)
@@ -157,11 +98,5 @@ char	*get_next_line(int fd)
 		if (ft_srch_nl(stat))
 			break ;
 	}
-	r = ft_keepstart(stat);
-	temp = stat;
-	stat = ft_keepend(temp);
-	free(temp);
-	if (!stat)
-		ft_free(&stat);
-	return (r);
+	return (sub_gnl(r, &stat, temp));
 }

@@ -18,13 +18,13 @@
 # include <limits.h>
 
 void	*ft_calloc(size_t count, size_t size);
+void	ft_free(char **ptr);
 char	*ft_keepend(char *ptr);
 char	*ft_keepstart(char *ptr);
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_srch_nl(const char *str);
 char	*get_next_line(int fd);
-void	ft_free(char **ptr);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
