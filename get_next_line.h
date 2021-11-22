@@ -24,6 +24,7 @@ size_t	ft_strlen(const char *s);
 char	*ft_strjoin(const char *s1, const char *s2);
 int		ft_srch_nl(const char *str);
 char	*get_next_line(int fd);
+void	ft_free(char **ptr);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1

@@ -53,13 +53,12 @@ char	*ft_keepstart(char *str)
 		dest[i] = str[i];
 		i++;
 	}
-	dest[i++] = '\n';
+//	dest[i++] = '\n';
+	if (str[i] == '\n')
+		dest[i++] = '\n';
 	dest[i] = 0;
-	if (str[0] == '\n' && str[1] == 0)
-	{
-		free(dest);
-		dest = NULL;
-	}
+	if (dest[0] == 0)
+		ft_free(&dest);
 	return (dest);
 }
 
@@ -127,7 +126,13 @@ int	ft_srch_nl(const char *str)
 			return (i);
 	return (0);
 }
-#include <stdio.h>
+
+void	ft_free(char **ptr)
+{
+	free(*ptr);
+	*ptr = NULL;
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*stat = NULL;
@@ -138,7 +143,7 @@ char	*get_next_line(int fd)
 
 	rd = BUFFER_SIZE;
 	r = NULL;
-	if (fd < 0 || fd > 1023 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX - 2)
+	if (fd < 0 || fd > 1023 || BUFFER_SIZE < 1 || BUFFER_SIZE > INT_MAX - 2)
 		return (0);
 	while (rd > 0)
 	{
@@ -148,7 +153,7 @@ char	*get_next_line(int fd)
 		buf[rd] = 0;
 		temp = stat;
 		stat = ft_strjoin(temp, buf);
-		free(temp);
+		ft_free(&temp);
 		if (ft_srch_nl(stat))
 			break ;
 	}
@@ -156,10 +161,7 @@ char	*get_next_line(int fd)
 	temp = stat;
 	stat = ft_keepend(temp);
 	free(temp);
-	if (!*stat)
-	{
-		stat = NULL;
-		free(stat);
-	}
+	if (!stat)
+		ft_free(&stat);
 	return (r);
 }
