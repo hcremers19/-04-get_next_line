@@ -26,7 +26,7 @@ char	*ft_keepend(char *str)
 		return (0);
 	j = 0;
 	i++;
-	while (str[i])
+	while (str && str[i])
 	{
 		dest[j] = str[i];
 		j++;
@@ -46,16 +46,16 @@ char	*ft_keepstart(char *str)
 	i = 0;
 	while (str && str[i] && str[i] != '\n')
 		i++;
-	dest = ft_calloc(i + 2, sizeof(char));
+	dest = ft_calloc(i + 1, sizeof(char));
 	if (!dest)
 		return (0);
 	i = 0;
-	while (str[i] && str[i] != '\n')
+	while (str && str[i] && str[i] != '\n')
 	{
 		dest[i] = str[i];
 		i++;
 	}
-	if (str[i] == '\n')
+	if (str && str[i] == '\n')
 		dest[i++] = '\n';
 	dest[i] = 0;
 	if (dest[0] == 0)
@@ -78,7 +78,7 @@ char	*get_next_line(int fd)
 {
 	static char	*stat = NULL;
 	int			rd;
-	char		buf[BUFFER_SIZE + 1];
+	char		*buf;
 	char		*temp;
 	char		*r;
 
@@ -88,6 +88,7 @@ char	*get_next_line(int fd)
 		return (0);
 	while (rd > 0)
 	{
+		buf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 		rd = read(fd, buf, BUFFER_SIZE);
 		if (rd == -1)
 			return (0);
@@ -95,6 +96,7 @@ char	*get_next_line(int fd)
 		temp = stat;
 		stat = ft_strjoin(temp, buf);
 		ft_free(&temp);
+		ft_free(&buf);
 		if (ft_srch_nl(stat))
 			break ;
 	}
