@@ -16,14 +16,15 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <limits.h>
-# include <stdio.h>
+# include <stdio.h>/*
+# include "wraloc/wraloc.h"*/
 
 void	*ft_calloc(size_t count, size_t size);
 void	ft_free(char **ptr);
 char	*ft_keepend(char *ptr);
 char	*ft_keepstart(char *ptr);
 size_t	ft_strlen(const char *s);
-char	*ft_strjoin(const char *s1, const char *s2);
+char	*ft_strjoin(char *s1, char *s2);
 int		ft_srch_nl(const char *str);
 char	*get_next_line(int fd);
 

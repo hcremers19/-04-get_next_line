@@ -33,14 +33,16 @@ char	*ft_keepend(char *str)
 		i++;
 	}
 	dest[j] = 0;
-	if (dest[0] == 0)
+	if (!dest || dest[0] == 0)
 		ft_free(&dest);
+//	printf("[dest = %p]		", *dest);
 	return (dest);
 }
 
 char	*ft_keepstart(char *str)
 {
 	int		i;
+	int		j;
 	char	*dest;
 
 	i = 0;
@@ -49,28 +51,30 @@ char	*ft_keepstart(char *str)
 	dest = ft_calloc(i + 1, sizeof(char));
 	if (!dest)
 		return (0);
-	i = 0;
-	while (str && str[i] && str[i] != '\n')
+	j = 0;
+	while (i >= j)
 	{
-		dest[i] = str[i];
-		i++;
+		dest[j] = str[j];
+		j++;
 	}
-	if (str && str[i] == '\n')
-		dest[i++] = '\n';
-	dest[i] = 0;
-	if (dest[0] == 0)
+	dest[j] = 0;
+	if (!dest || dest[0] == 0)
 		ft_free(&dest);
 	return (dest);
 }
 
-char	*sub_gnl(char *r, char **stat, char *temp)
+char	*sub_gnl(char **stat)
 {
+	char	*r;
+	char	*temp;
+
 	r = ft_keepstart(*stat);
 	temp = *stat;
 	*stat = ft_keepend(temp);
-	free(temp);
+	ft_free(&temp);
 	if (!stat)
 		ft_free(stat);
+//	write(1, "Z", 1);
 	return (r);
 }
 
@@ -79,26 +83,36 @@ char	*get_next_line(int fd)
 	static char	*stat = NULL;
 	int			rd;
 	char		*buf;
-	char		*temp;
-	char		*r;
 
 	rd = BUFFER_SIZE;
-	r = NULL;
 	if (fd < 0 || fd > 1023 || BUFFER_SIZE < 1 || BUFFER_SIZE > INT_MAX - 2)
 		return (0);
 	while (rd > 0)
 	{
 		buf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		if (!buf)
+			return (0);
 		rd = read(fd, buf, BUFFER_SIZE);
 		if (rd == -1)
+		{
+			ft_free(&buf);
+			ft_free(&stat);
 			return (0);
-		buf[rd] = 0;
-		temp = stat;
-		stat = ft_strjoin(temp, buf);
-		ft_free(&temp);
-		ft_free(&buf);
-		if (ft_srch_nl(stat))
+		}
+		stat = ft_strjoin(stat, buf);
+		if (ft_srch_nl(stat) != -1)
 			break ;
 	}
-	return (sub_gnl(r, &stat, temp));
+//	printf("Static [%s]", stat);
+	return (sub_gnl(&stat));
 }
+/*
+À faire : réviser les calloc -> s'assurer que le bon nombre de char est assigné
+à chaque fois
+(pas de leaks et peu de seg fault, donc les caractères superflus ne peuvent
+s'afficher que parce que le code va chercher dans sa mmémoire précédente)
+Checker aussi les \0 que je rajoute ou pas à la fin des chaînes allouées pour
+voir si je sécurise ou pas
+Et tester voir à chaque fois que je rajoute un truc si le résultat est mieux ou
+moins bien 
+*/
