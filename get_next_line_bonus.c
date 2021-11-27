@@ -79,7 +79,7 @@ char	*sub_gnl(char **stat)
 
 char	*get_next_line(int fd)
 {
-	static char	*stat;
+	static char	*stat[1023];
 	int			rd;
 	char		*buf;
 
@@ -95,12 +95,12 @@ char	*get_next_line(int fd)
 		if (rd == -1)
 		{
 			ft_free(&buf);
-			ft_free(&stat);
+			ft_free(&stat[fd]);
 			return (0);
 		}
-		stat = ft_strjoin(stat, buf);
-		if (ft_srch_nl(stat) != -1)
+		stat[fd] = ft_strjoin(stat[fd], buf);
+		if (ft_srch_nl(stat[fd]) != -1)
 			break ;
 	}
-	return (sub_gnl(&stat));
+	return (sub_gnl(&stat[fd]));
 }
