@@ -15,26 +15,26 @@
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
+	int		i;
 	int		j;
-	size_t	len;
 
+	i = 0;
+	j = 0;
 	if (!s1 && !s2)
 		return (0);
 	str = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	if (!str)
 		return (0);
-	len = 0;
-	while (s1 && s1[len])
+	while (s1 && s1[i])
 	{
-		str[len] = s1[len];
-		len++;
+		str[i] = s1[i];
+		i++;
 	}
 	ft_free(&s1);
-	j = 0;
 	while (s2 && s2[j])
-		str[len++] = s2[j++];
-	str[len] = 0;
+		str[i++] = s2[j++];
 	ft_free(&s2);
+	str[i] = 0;
 	return (str);
 }
 
@@ -42,12 +42,15 @@ int	ft_srch_nl(const char *str)
 {
 	int	i;
 
+	i = 0;
 	if (!str)
 		return (-1);
-	i = -1;
-	while (str[++i])
+	while (str[i])
+	{	
 		if (str[i] == '\n')
 			return (i);
+		i++;
+	}
 	return (-1);
 }
 
@@ -61,18 +64,17 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+char	*ft_calloc(size_t count, size_t size)
 {
 	char	*rtn;
 	size_t	i;
 
-//	rtn = (char *)malloc(size * count);
-	rtn = malloc((sizeof(size)) * count);
+	rtn = malloc(count * (sizeof(size)));
 	if (!rtn)
 		return (0);
-	i = -1;
-	while (++i <= count)
-		rtn[i] = 0;
+	i = 0;
+	while (i <= count)
+		rtn[i++] = 0;
 	return (rtn);
 }
 

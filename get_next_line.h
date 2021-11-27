@@ -16,10 +16,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <limits.h>
-# include <stdio.h>/*
-# include "wraloc/wraloc.h"*/
+# include <stdio.h>
 
-void	*ft_calloc(size_t count, size_t size);
+char	*ft_calloc(size_t count, size_t size);
 void	ft_free(char **ptr);
 char	*ft_keepend(char *ptr);
 char	*ft_keepstart(char *ptr);

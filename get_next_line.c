@@ -33,9 +33,8 @@ char	*ft_keepend(char *str)
 		i++;
 	}
 	dest[j] = 0;
-	if (!dest || dest[0] == 0)
+	if (!dest[0])
 		ft_free(&dest);
-//	printf("[dest = %p]		", *dest);
 	return (dest);
 }
 
@@ -52,13 +51,14 @@ char	*ft_keepstart(char *str)
 	if (!dest)
 		return (0);
 	j = 0;
-	while (i >= j)
+	i++;
+	while (j < i)
 	{
 		dest[j] = str[j];
 		j++;
 	}
 	dest[j] = 0;
-	if (!dest || dest[0] == 0)
+	if (!dest[0])
 		ft_free(&dest);
 	return (dest);
 }
@@ -74,7 +74,6 @@ char	*sub_gnl(char **stat)
 	ft_free(&temp);
 	if (!stat)
 		ft_free(stat);
-//	write(1, "Z", 1);
 	return (r);
 }
 
@@ -103,16 +102,5 @@ char	*get_next_line(int fd)
 		if (ft_srch_nl(stat) != -1)
 			break ;
 	}
-//	printf("Static [%s]", stat);
 	return (sub_gnl(&stat));
 }
-/*
-À faire : réviser les calloc -> s'assurer que le bon nombre de char est assigné
-à chaque fois
-(pas de leaks et peu de seg fault, donc les caractères superflus ne peuvent
-s'afficher que parce que le code va chercher dans sa mmémoire précédente)
-Checker aussi les \0 que je rajoute ou pas à la fin des chaînes allouées pour
-voir si je sécurise ou pas
-Et tester voir à chaque fois que je rajoute un truc si le résultat est mieux ou
-moins bien 
-*/
