@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hcremers <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hcremers <hcremers@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 20:35:19 by hcremers          #+#    #+#             */
-/*   Updated: 2021/11/28 20:36:01 by hcremers         ###   ########.fr       */
+/*   Updated: 2022/11/09 17:04:44 by hcremers         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,13 @@ char	*sub_gnl(char **stat)
 
 char	*get_next_line(int fd)
 {
-	static char	*stat[1023];
+	static char	*stat[FOPEN_MAX];
 	int			rd;
 	char		*buf;
 
 	rd = BUFFER_SIZE;
-	if (fd < 0 || fd > 1023 || BUFFER_SIZE < 1 || BUFFER_SIZE > INT_MAX - 2)
+	if (fd < 0 || fd > FOPEN_MAX \
+		|| BUFFER_SIZE < 1 || BUFFER_SIZE > INT_MAX - 2)
 		return (0);
 	while (rd > 0)
 	{
